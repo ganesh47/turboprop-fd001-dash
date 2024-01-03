@@ -11,7 +11,12 @@
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.4"
+    "next": "14.0.4",
+    "@duckdb/duckdb-wasm": "^1.28.0",
+    "@nextui-org/react": "^2.2.9",
+    "echarts": "^5.4.3",
+    "echarts-for-react": "^3.0.2",
+    "framer-motion": "^10.16.16"
   },
   "devDependencies": {
     "typescript": "^5",
