@@ -32,7 +32,6 @@ export const TrainigDataSet = () => {
         xAxis: {
 
             type: 'value',
-            name: 'RUL',
             nameLocation: 'start'
         },
         yAxis: {
