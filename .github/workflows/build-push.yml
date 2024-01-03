@@ -1,48 +1,30 @@
-name: Build & Publish
+name: GitHub Pages deploy
 
 on:
-  push
+  push:
+    branches: [main]
 
 jobs:
-  next-build:
+  build:
     runs-on: ubuntu-latest
-    container: node:lts          # Use node LTS container version, same as Dockerfile base image
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4       # Checkout the code
-      - run: npm ci            #install dependencies
-      - run: npm run build
-      - name: Upload Next build          # Upload the artifact
-        uses: actions/upload-artifact@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
         with:
-          name: build
-          path: |
-            .next
-            public
-          retention-days: 1
-  docker-push:
-    needs: next-build        # Job depends on next-build(above) job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download next build       # Download the above uploaded artifact
-        uses: actions/download-artifact@v4
+          node-version: '16.x'
+
+      - name: Installing my packages
+        run: npm ci
+
+      - name: Build my App
+        run: npm run build && npm run export && touch ./out/.nojekyll
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
-          name: build
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and Push Docker Images
-        run: |
-          export CURRENT_BRANCH=${GITHUB_REF#refs/heads/}
-          export TAG=`date +"%d-%m-%Y-%H-%M"`
-          export GITHUB_REF_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
-          export GITHUB_BRANCH_IMAGE=ghcr.io/$GITHUB_REPOSITORY:${TAG}
-          export GITHUB_BRANCH_IMAGE=`echo "$GITHUB_BRANCH_IMAGE" | tr '[:upper:]' '[:lower:]'`
-          docker build -t $GITHUB_BRANCH_IMAGE .
-          echo "Pushing Image to GitHub Container Registry"
-          docker push $GITHUB_BRANCH_IMAGE
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: public # The branch the action will deploy to
+          FOLDER: out # The folder the action will deploy to
