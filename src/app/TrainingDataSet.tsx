@@ -82,7 +82,7 @@ export const TrainigDataSet = () => {
     };
 
     return (<div className={"grid grid-rows-[68px,auto] w-full"}>
-        <div>
+        <div className={"bg-black"}>
             <Select
                 color={"default"}
                 label="Select a sensor to start observing"

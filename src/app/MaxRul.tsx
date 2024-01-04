@@ -38,9 +38,9 @@ export const MaxRul = () => {
         ]
     };
 
-    return (<div>
+    return (<>
         <EChartsWrapper
-            style={{display: "grid"}}
+            style={{display: "grid", height:"100%"}}
             opts={{renderer: "canvas"}}
             notMerge={false}
             lazyUpdate={true}
@@ -51,5 +51,5 @@ export const MaxRul = () => {
 
         />
 
-    </div>)
+    </>)
 }
